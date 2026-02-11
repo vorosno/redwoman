@@ -1,24 +1,67 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <title>én</title>
-    <style>
-        body {
-            background-color: red;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-            font-size: 50px;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>minimal</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: #B32714;
+        font-family: Futura, sans-serif;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .item {
+        position: absolute;
+        font-size: 28px;
+        color: white;
+        cursor: grab;
+        user-select: none;
+        text-decoration: none;
+    }
+
+    .item:active {
+        cursor: grabbing;
+    }
+
+    .item:hover {
+        opacity: 0.7;
+    }
+</style>
 </head>
 <body>
-    SZIA! AZ ÉN ELSŐ GITHUB OLDALAM!
+
+<a href="#" class="item" style="top:40%; left:30%;">rolam</a>
+<a href="#" class="item" style="top:50%; left:50%;">projektek</a>
+<a href="#" class="item" style="top:60%; left:70%;">kapcsolat</a>
+
+<script>
+    const items = document.querySelectorAll(".item");
+
+    items.forEach(item => {
+        let offsetX, offsetY, isDragging = false;
+
+        item.addEventListener("mousedown", (e) => {
+            isDragging = true;
+            offsetX = e.clientX - item.offsetLeft;
+            offsetY = e.clientY - item.offsetTop;
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            if (isDragging) {
+                item.style.left = (e.clientX - offsetX) + "px";
+                item.style.top = (e.clientY - offsetY) + "px";
+            }
+        });
+
+        document.addEventListener("mouseup", () => {
+            isDragging = false;
+        });
+    });
+</script>
+
 </body>
 </html>
