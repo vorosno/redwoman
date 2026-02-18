@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <title>helloo</title>
 
+<!-- p5.js könyvtár betöltése -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+
 <style>
     body {
         margin: 0;
@@ -81,12 +84,11 @@
 <a href="projektek.html" class="item" style="top:50%; left:50%;">projektek</a>
 <a href="kapcsolat.html" class="item" style="top:60%; left:70%;">kapcsolat</a>
 
+<!-- SLIDER és menüpontok logika -->
 <script>
-    // SLIDER LOGIKA - balról jobbra, 1 látható
+    // SLIDER LOGIKA
     const slides = document.querySelectorAll(".slider img");
     let current = 0;
-
-    // első kép induláskor látszódjon
     slides[current].classList.add("active");
 
     setInterval(() => {
@@ -94,7 +96,6 @@
         current = (current + 1) % slides.length;
         slides[current].classList.add("active");
     }, 2000);
-
 
     // HÚZHATÓ MENÜPONTOK
     const items = document.querySelectorAll(".item");
@@ -119,6 +120,61 @@
             isDragging = false;
         });
     });
+</script>
+
+<!-- PORSZERŰ EGÉRKÖVETŐ EFFEKT p5.js -->
+<script>
+let particles = [];
+
+function setup() {
+  let canvas = createCanvas(window.innerWidth, window.innerHeight);
+  canvas.position(0, 0);
+  canvas.style('z-index', '-1'); // háttérbe kerül
+  canvas.style('pointer-events', 'none'); // ne zavarja a slider-t
+  background(179, 39, 20);
+  smooth();
+}
+
+function draw() {
+  // áttetsző réteg a lassú halványításhoz
+  fill(179, 39, 20, 15);
+  noStroke();
+  rect(0, 0, width, height);
+
+  // ha mozog az egér, hozzunk létre új részecskéket
+  if (mouseX != pmouseX || mouseY != pmouseY) {
+    for (let i = 0; i < 12; i++) {
+      particles.push({
+        x: mouseX + random(-5,5),
+        y: mouseY + random(-5,5),
+        size: random(1, 2.5),
+        alpha: random(150, 255),
+        vx: random(-0.3,0.3),
+        vy: random(-0.3,0.3)
+      });
+    }
+  }
+
+  // frissítés és kirajzolás
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= 1.5;
+    fill(255, p.alpha);
+    noStroke();
+    ellipse(p.x, p.y, p.size);
+
+    if (p.alpha <= 0) {
+      particles.splice(i, 1);
+    }
+  }
+}
+
+// Ablakméret változásának kezelése
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
+}
 </script>
 
 </body>
