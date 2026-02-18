@@ -1,1 +1,168 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Tic-Tac-Toe</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: transparent;
+    font-family: Futura, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+a.back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+button#reset-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+button#reset-btn:hover {
+    background: white;
+    color: #B32714; /* kontraszt szín hover-re */
+}
+</style>
+</head>
+<body>
+
+<a href="rolam.html" class="back">vissza</a>
+
+<h1 style="color:white;">Tic-Tac-Toe</h1>
+<p style="color:white;">Kattints a cellákra, hogy X és O játékot játssz!</p>
+
+<button id="reset-btn">Új játék</button>
+
+<script>
+let board;
+let w, h;
+let currentPlayer = 'X';
+let gameOver = false;
+let winner = null;
+let winnerGif;
+let canvas;
+
+function preload() {
+  winnerGif = loadImage('nyertes.gif'); // nyertes GIF
+}
+
+function setup() {
+  canvas = createCanvas(300, 300);
+  canvas.parent(document.body);
+  canvas.style('margin-top','20px');
+  w = width / 3;
+  h = height / 3;
+  initBoard();
+  textSize(64);
+  textAlign(CENTER, CENTER);
+}
+
+function draw() {
+  clear(); // teljesen átlátszó háttér
+
+  stroke(255);
+  strokeWeight(4);
+  // rács
+  line(w, 0, w, height);
+  line(2*w, 0, 2*w, height);
+  line(0, h, width, h);
+  line(0, 2*h, width, 2*h);
+
+  // X és O fehér színnel
+  fill(255);
+  noStroke();
+  for(let i=0;i<3;i++){
+    for(let j=0;j<3;j++){
+      let xPos = w*j + w/2;
+      let yPos = h*i + h/2;
+      text(board[i][j], xPos, yPos);
+    }
+  }
+
+  // nyertes GIF
+  if(gameOver && winner){
+    imageMode(CENTER);
+    image(winnerGif, width/2, height/2, width, height);
+    noLoop();
+  } else if(gameOver && !winner){
+    textSize(32);
+    fill(255);
+    text("Döntetlen!", width/2, height/2);
+    noLoop();
+  }
+}
+
+function mousePressed(){
+  if(gameOver) return;
+  let j = floor(mouseX / w);
+  let i = floor(mouseY / h);
+  if(i>=0 && i<3 && j>=0 && j<3 && board[i][j]==''){
+    board[i][j] = currentPlayer;
+    if(checkWinner(currentPlayer)){
+      winner = currentPlayer;
+      gameOver = true;
+    } else if(isBoardFull()){
+      winner = null;
+      gameOver = true;
+    }
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  }
+}
+
+// Nyertes ellenőrzése
+function checkWinner(player){
+  for(let i=0;i<3;i++){
+    if(board[i][0]===player && board[i][1]===player && board[i][2]===player) return true;
+    if(board[0][i]===player && board[1][i]===player && board[2][i]===player) return true;
+  }
+  if(board[0][0]===player && board[1][1]===player && board[2][2]===player) return true;
+  if(board[0][2]===player && board[1][1]===player && board[2][0]===player) return true;
+  return false;
+}
+
+// Ellenőrizzük, ha teljes a tábla
+function isBoardFull(){
+  for(let i=0;i<3;i++){
+    for(let j=0;j<3;j++){
+      if(board[i][j]=='') return false;
+    }
+  }
+  return true;
+}
+
+// Inicializáljuk a táblát
+function initBoard(){
+  board = [
+    ['','',''],
+    ['','',''],
+    ['','','']
+  ];
+  currentPlayer = 'X';
+  gameOver = false;
+  winner = null;
+  loop(); // újraindítjuk a draw-t
+}
+
+// Reset gomb
+document.getElementById('reset-btn').addEventListener('click', initBoard);
+</script>
+
+</body>
+</html>
