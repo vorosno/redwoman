@@ -8,14 +8,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 
 <style>
-    body {
-        margin: 0;
-        height: 100vh;
-        background: #B32714;
-        font-family: Futura, sans-serif;
-        overflow: hidden;
-        position: relative;
-    }
+   body {
+    margin: 0;
+    height: 100vh;
+    background-color: #B32714; /* fallback szín, ha a kép nem töltődik */
+    background-image: url('kep2.JPG'); /* a feltöltött kép */
+    background-size: cover;   /* kitölti a teljes hátteret, arányosan */
+    background-position: center; /* középre igazítás */
+    background-repeat: no-repeat; /* ne ismétlődjön */
+    font-family: Futura, sans-serif;
+    color: white;
+}
 
     /* SLIDER - egy sorban */
     .slider {
