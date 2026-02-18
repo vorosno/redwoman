@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>oldal2</title>
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: white;
+    font-family: Arial, sans-serif;
+}
+.word {
+    position: absolute;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+}
+</style>
+</head>
+<body>
 
+<script>
+
+const sentence = "nem tudok mit mondani se magamról, se semmi másról senkinek. nem feladatom magyarázni, sem neked, sem magamnak ... nem kenyerem nem kenyerem nem kenyerem és nem feladatom, hogy megérts";
+
+const words = sentence.split(" ");
+
+function fillScreen() {
+
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    let totalArea = screenWidth * screenHeight;
+    let coveredArea = 0;
+
+    while (coveredArea < totalArea * 1.2) {
+
+        const word = document.createElement("div");
+        word.classList.add("word");
+
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        word.innerText = randomWord;
+
+        const fontSize = Math.random() * 120 + 20; // 20px - 140px
+        word.style.fontSize = fontSize + "px";
+
+        word.style.left = Math.random() * screenWidth + "px";
+        word.style.top = Math.random() * screenHeight + "px";
+
+        const rotation = Math.random() * 360;
+        word.style.transform = rotate(${rotation}deg);
+
+        document.body.appendChild(word);
+
+        coveredArea += fontSize * fontSize * 0.6; 
+    }
+}
+
+fillScreen();
+
+</script>
+
+</body>
+</html>
