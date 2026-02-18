@@ -61,6 +61,8 @@ let canvas;
 
 function preload() {
   winnerGif = loadImage('csotany.gif'); // nyertes GIF
+    function preload() {
+  winner2Gif = loadImage('csiga.gif'); // dontetlen GIF
 }
 
 function setup() {
@@ -102,9 +104,8 @@ function draw() {
     image(winnerGif, width/2, height/2, width, height);
     noLoop();
   } else if(gameOver && !winner){
-    textSize(32);
-    fill(255);
-    text("Döntetlen!", width/2, height/2);
+  imageMode(CENTER);
+    image(winner1Gif, width/2, height/2, width, height);
     noLoop();
   }
 }
