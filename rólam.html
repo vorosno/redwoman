@@ -14,6 +14,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 a.back {
@@ -37,14 +38,25 @@ p {
     margin-bottom: 40px;
 }
 
+/* Legfelül középen a két szem GIF */
+#top-gif {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: auto;
+    z-index: 5;
+}
+
 /* GIF konténer */
 .gif-container {
     display: flex;
-    gap: 60px; /* távolság a GIF-ek között */
+    gap: 20px; /* távolság a GIF-ek között */
 }
 
 .gif-container a img {
-    width: 200px;  /* tetszőleges méret */
+    width: 150px;  /* tetszőleges méret */
     height: auto;
     cursor: pointer;
     transition: transform 0.3s;
@@ -59,10 +71,13 @@ p {
 
 <a href="index.html" class="back">vissza</a>
 
+<!-- Legfelül a két szem GIF -->
+<img src="ketszem.gif" alt="Két szem" id="top-gif">
+
 <h1>rólam</h1>
 <p>itt majd olvass.</p>
 
-<!-- GIF-ek egymás mellett -->
+<!-- Három kattintható GIF egymás mellett -->
 <div class="gif-container">
     <a href="oldal1.html"><img src="gif1.gif" alt="Gif 1"></a>
     <a href="oldal2.html"><img src="gif2.gif" alt="Gif 2"></a>
