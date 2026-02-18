@@ -8,7 +8,7 @@
 body {
     margin: 0;
     height: 100vh;
-    background-color: #D43B19; /* piros háttér */
+    background-color: #D43B19;
     font-family: Futura, sans-serif;
     display: flex;
     flex-direction: column;
@@ -41,15 +41,14 @@ button#reset-btn:hover {
     color: #D43B19; 
 }
 
-/* Nyertes GIF stílus */
 #winnerGif {
     display: none;
-    width: 300px;
-    height: 300px;
-    margin-top: 10px;
+    width: 500px;
+    height: 500px;
+    margin-top: 20px;
+    z-index: 10;
 }
 
-/* Döntetlen / nyertes szöveg alatt */
 #resultText {
     color: white;
     font-size: 28px;
@@ -69,7 +68,6 @@ button#reset-btn:hover {
 <button id="reset-btn">Új játék</button>
 <div id="resultText"></div>
 
-<!-- Nyertes GIF -->
 <img id="winnerGif" src="" alt="Nyertes">
 
 <script>
@@ -79,9 +77,10 @@ let currentPlayer = 'X';
 let gameOver = false;
 let winner = null;
 let canvas;
+let explosion = []; // robbanás részecskék
 
 function setup() {
-  canvas = createCanvas(450, 450); // nagyobb tábla
+  canvas = createCanvas(450, 450);
   canvas.parent(document.body);
   canvas.style('margin-top','20px');
   w = width / 3;
@@ -92,17 +91,15 @@ function setup() {
 }
 
 function draw() {
-  clear(); // átlátszó canvas
+  clear();
 
   stroke(255);
   strokeWeight(6);
-  // rács
   line(w, 0, w, height);
   line(2*w, 0, 2*w, height);
   line(0, h, width, h);
   line(0, 2*h, width, 2*h);
 
-  // X és O fehér színnel
   fill(255);
   noStroke();
   for(let i=0;i<3;i++){
@@ -112,9 +109,22 @@ function draw() {
       text(board[i][j], xPos, yPos);
     }
   }
+
+  // színes robbanás
+  for(let i = explosion.length-1; i>=0; i--){
+    let p = explosion[i];
+    fill(p.r, p.g, p.b, p.alpha);
+    noStroke();
+    ellipse(p.x, p.y, p.size);
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= 3; // lassú eltűnés
+    if(p.alpha <= 0){
+      explosion.splice(i,1);
+    }
+  }
 }
 
-// Ember lépése
 function mousePressed(){
   if(gameOver) return;
   let j = floor(mouseX / w);
@@ -130,13 +140,13 @@ function mousePressed(){
       gameOver = true;
       showResult("Döntetlen!");
     } else {
-      aiMove();
+      setTimeout(aiMove, 500); // fél másodperces késleltetés
     }
   }
 }
 
-// Egyszerű AI: véletlenszerű üres cella
 function aiMove(){
+  if(gameOver) return;
   let emptyCells = [];
   for(let i=0;i<3;i++){
     for(let j=0;j<3;j++){
@@ -158,7 +168,6 @@ function aiMove(){
   }
 }
 
-// Nyertes ellenőrzése
 function checkWinner(player){
   for(let i=0;i<3;i++){
     if(board[i][0]===player && board[i][1]===player && board[i][2]===player) return true;
@@ -169,7 +178,6 @@ function checkWinner(player){
   return false;
 }
 
-// Ellenőrizzük, ha teljes a tábla
 function isBoardFull(){
   for(let i=0;i<3;i++){
     for(let j=0;j<3;j++){
@@ -179,7 +187,6 @@ function isBoardFull(){
   return true;
 }
 
-// Inicializáljuk a táblát
 function initBoard(){
   board = [
     ['','',''],
@@ -189,14 +196,29 @@ function initBoard(){
   currentPlayer = 'X';
   gameOver = false;
   winner = null;
+  explosion = [];
   loop();
   document.getElementById('winnerGif').style.display = 'none';
   document.getElementById('winnerGif').src = '';
   document.getElementById('resultText').innerText = "";
 }
 
-// Nyertes GIF megjelenítése
 function showWinner(){
+  // színes robbanás generálás
+  for(let i=0;i<100;i++){
+    explosion.push({
+      x: random(width/2-50, width/2+50),
+      y: random(height/2-50, height/2+50),
+      vx: random(-5,5),
+      vy: random(-5,5),
+      size: random(8,20),
+      alpha: 255,
+      r: random(200,255),
+      g: random(100,255),
+      b: random(100,255)
+    });
+  }
+
   if(winner === 'X'){
     document.getElementById('winnerGif').src = 'csotany.gif';
     document.getElementById('resultText').innerText = "Te nyertél!";
@@ -208,14 +230,12 @@ function showWinner(){
   noLoop();
 }
 
-// Döntetlen szöveg megjelenítése
 function showResult(text){
   document.getElementById('resultText').innerText = text;
   document.getElementById('winnerGif').style.display = 'none';
   noLoop();
 }
 
-// Reset gomb
 document.getElementById('reset-btn').addEventListener('click', initBoard);
 </script>
 
