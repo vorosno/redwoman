@@ -8,12 +8,13 @@
 body {
     margin: 0;
     height: 100vh;
-    background-color: #D43B19;
+    background-color: #D43B19; /* piros háttér */
     font-family: Futura, sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 a.back {
@@ -37,7 +38,19 @@ button#reset-btn {
 
 button#reset-btn:hover {
     background: white;
-    color: #B32714; /* kontraszt szín hover-re */
+    color: #D43B19; /* kontraszt hover */
+}
+
+/* Nyertes GIF stílus */
+#winnerGif {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    z-index: 10;
 }
 </style>
 </head>
@@ -45,10 +58,13 @@ button#reset-btn:hover {
 
 <a href="rólam.html" class="back">vissza</a>
 
-<h1 style="color:white;">tic-tac-toe</h1>
-<p style="color:white;">játssz!</p>
+<h1 style="color:white;">Tic-Tac-Toe</h1>
+<p style="color:white;">Játssz az X-el, a gép O-val játszik!</p>
 
-<button id="reset-btn">újra</button>
+<button id="reset-btn">Új játék</button>
+
+<!-- Nyertes GIF -->
+<img id="winnerGif" src="csotany.gif" alt="Nyertes">
 
 <script>
 let board;
@@ -56,12 +72,7 @@ let w, h;
 let currentPlayer = 'X';
 let gameOver = false;
 let winner = null;
-let winnerGif;
 let canvas;
-
-function preload() {
-  winnerGif = loadImage('csotany.gif'); // nyertes GIF
-}
 
 function setup() {
   canvas = createCanvas(300, 300);
@@ -75,7 +86,7 @@ function setup() {
 }
 
 function draw() {
-  clear(); // teljesen átlátszó háttér
+  clear(); // átlátszó canvas
 
   stroke(255);
   strokeWeight(4);
@@ -96,16 +107,20 @@ function draw() {
     }
   }
 
-  // nyertes GIF
-  if(gameOver && winner){
-    imageMode(CENTER);
-    image(winnerGif, width/2, height/2, width, height);
-    noLoop();
-  } else if(gameOver && !winner){
-    textSize(32);
-    fill(255);
-    text("basszus!", width/2, height/2);
-    noLoop();
+  // Nyertes GIF vagy döntetlen szöveg
+  if(gameOver){
+    if(winner){
+      document.getElementById('winnerGif').style.display = 'block';
+      noLoop();
+    } else {
+      fill(255);
+      textSize(32);
+      textAlign(CENTER, CENTER);
+      text("Döntetlen!", width/2, height/2);
+      noLoop();
+    }
+  } else {
+    document.getElementById('winnerGif').style.display = 'none';
   }
 }
 
@@ -114,15 +129,37 @@ function mousePressed(){
   let j = floor(mouseX / w);
   let i = floor(mouseY / h);
   if(i>=0 && i<3 && j>=0 && j<3 && board[i][j]==''){
-    board[i][j] = currentPlayer;
-    if(checkWinner(currentPlayer)){
-      winner = currentPlayer;
+    board[i][j] = 'X';
+    if(checkWinner('X')){
+      winner = 'X';
+      gameOver = true;
+    } else if(isBoardFull()){
+      winner = null;
+      gameOver = true;
+    } else {
+      aiMove();
+    }
+  }
+}
+
+// Egyszerű AI: véletlenszerű üres cella
+function aiMove(){
+  let emptyCells = [];
+  for(let i=0;i<3;i++){
+    for(let j=0;j<3;j++){
+      if(board[i][j]=='') emptyCells.push([i,j]);
+    }
+  }
+  if(emptyCells.length > 0){
+    let choice = random(emptyCells);
+    board[choice[0]][choice[1]] = 'O';
+    if(checkWinner('O')){
+      winner = 'O';
       gameOver = true;
     } else if(isBoardFull()){
       winner = null;
       gameOver = true;
     }
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   }
 }
 
@@ -157,7 +194,8 @@ function initBoard(){
   currentPlayer = 'X';
   gameOver = false;
   winner = null;
-  loop(); // újraindítjuk a draw-t
+  loop();
+  document.getElementById('winnerGif').style.display = 'none';
 }
 
 // Reset gomb
