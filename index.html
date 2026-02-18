@@ -67,10 +67,10 @@ body {
     opacity: 0.7;
 }
 
-/* LEGÖRDÜLŐ PANEL */
+/* LEGÖRDÜLŐ PANEL - ALAP, NINCS KEREKÍTÉS, SZÖVEGEK ALÁHÚZVA */
 .dropdown-content {
     position: absolute;
-    background-color: white;
+    background-color: white; /* fehér, nem szürke */
     color: black;
     font-family: Futura, sans-serif;
     display: flex;
@@ -81,12 +81,12 @@ body {
     pointer-events: none;
     transition: opacity 0.4s ease, transform 0.4s ease;
     z-index: 10;
-    border-radius: 0;
+    border-radius: 0; /* nincs lekerekítés */
 }
 
 .dropdown-content a {
     color: black;
-    text-decoration: underline;
+    text-decoration: underline; /* aláhúzás */
     padding: 5px 10px;
     margin: 2px 0;
 }
@@ -120,7 +120,7 @@ body {
 
 <a href="kapcsolat.html" class="item" style="top:60%; left:70%;">kapcsolat</a>
 
-<!-- SLIDER, menüpontok logika -->
+<!-- SLIDER és menüpontok logika -->
 <script>
 const slides = document.querySelectorAll(".slider img");
 let current = 0;
@@ -132,26 +132,34 @@ setInterval(() => {
     slides[current].classList.add("active");
 }, 2000);
 
+// HÚZHATÓ MENÜPONTOK
 const items = document.querySelectorAll(".item");
+
 items.forEach(item => {
     let offsetX, offsetY, isDragging = false;
+
     item.addEventListener("mousedown", (e) => {
         isDragging = true;
         offsetX = e.clientX - item.offsetLeft;
         offsetY = e.clientY - item.offsetTop;
     });
+
     document.addEventListener("mousemove", (e) => {
         if (isDragging) {
             item.style.left = (e.clientX - offsetX) + "px";
             item.style.top = (e.clientY - offsetY) + "px";
         }
     });
-    document.addEventListener("mouseup", () => { isDragging = false; });
+
+    document.addEventListener("mouseup", () => {
+        isDragging = false;
+    });
 });
 
 // LEGÖRDÜLŐ PANEL
 const projectsItem = document.querySelector(".dropdown");
 const dropdown = document.getElementById("projects-dropdown");
+
 function updateDropdownPosition() {
     const rect = projectsItem.getBoundingClientRect();
     dropdown.style.top = rect.bottom + "px";
@@ -159,17 +167,20 @@ function updateDropdownPosition() {
 }
 updateDropdownPosition();
 window.addEventListener("resize", updateDropdownPosition);
+
 projectsItem.addEventListener("mouseenter", () => {
     updateDropdownPosition();
     dropdown.style.opacity = "1";
     dropdown.style.transform = "translateY(0px)";
     dropdown.style.pointerEvents = "auto";
 });
+
 projectsItem.addEventListener("mouseleave", () => {
     dropdown.style.opacity = "0";
     dropdown.style.transform = "translateY(-10px)";
     dropdown.style.pointerEvents = "none";
 });
+
 dropdown.addEventListener("mouseenter", () => {
     dropdown.style.opacity = "1";
     dropdown.style.transform = "translateY(0px)";
@@ -182,9 +193,10 @@ dropdown.addEventListener("mouseleave", () => {
 });
 </script>
 
-<!-- PORSZERŰ EGÉRKÖVETŐ EFFEKT -->
+<!-- PORSZERŰ EGÉRKÖVETŐ EFFEKT p5.js -->
 <script>
 let particles = [];
+
 function setup() {
   let canvas = createCanvas(window.innerWidth, window.innerHeight);
   canvas.position(0, 0);
@@ -193,6 +205,7 @@ function setup() {
   background(179, 39, 20);
   smooth();
 }
+
 function draw() {
   fill(179, 39, 20, 15);
   noStroke();
@@ -225,110 +238,10 @@ function draw() {
     }
   }
 }
-function windowResized() {
-  resizeCanvas(window.innerWidth, window.innerHeight);
-}
-</script>
-
-<!-- CSILLAGOK A SAROKBAN -->
-<script>
-let numStars = 3;
-let x = [], y = [], angle = [], speed = [], radius = [];
-let textures = [];
-
-function setupStars() {
-  for (let i=0;i<numStars;i++){
-    x[i] = random(width*0.05, width*0.2); // bal sarok
-    y[i] = random(height*0.05, height*0.2);
-    angle[i] = random(TWO_PI);
-    speed[i] = random(0.01, 0.05);
-    radius[i] = random(20,35);
-    textures[i] = createStarTexture(radius[i]*2);
-  }
-}
-
-function drawStars() {
-  for (let i=0;i<numStars;i++){
-    push();
-    translate(x[i], y[i]);
-    rotate(angle[i]);
-    imageMode(CENTER);
-    image(textures[i],0,0);
-    pop();
-    angle[i] += speed[i];
-  }
-}
-
-// Csillag textúra létrehozása
-function createStarTexture(size){
-  let pg = createGraphics(size,size);
-  pg.background(0,0);
-  pg.noStroke();
-  let points = 5;
-  let outerR = size/2;
-  let innerR = outerR/2.5;
-  pg.fill(255,255,200);
-  pg.push();
-  pg.translate(size/2,size/2);
-  pg.beginShape();
-  let angleStep = TWO_PI/points;
-  for(let a=0;a<TWO_PI;a+=angleStep){
-    let sx = cos(a)*outerR;
-    let sy = sin(a)*outerR;
-    pg.vertex(sx,sy);
-    sx = cos(a+angleStep/2)*innerR;
-    sy = sin(a+angleStep/2)*innerR;
-    pg.vertex(sx,sy);
-  }
-  pg.endShape(CLOSE);
-  pg.pop();
-  pg.loadPixels();
-  for(let i=0;i<pg.pixels.length;i++){
-    if(random(1)<0.05){
-      pg.pixels[i] = color(random(100,255),random(100,255),random(100,255));
-    }
-  }
-  pg.updatePixels();
-  return pg;
-}
-
-// Integrálás a fő draw() függvénybe
-function draw() {
-  fill(179, 39, 20, 15);
-  noStroke();
-  rect(0, 0, width, height);
-
-  if (mouseX != pmouseX || mouseY != pmouseY) {
-    for (let i = 0; i < 12; i++) {
-      particles.push({
-        x: mouseX + random(-5,5),
-        y: mouseY + random(-5,5),
-        size: random(1, 2.5),
-        alpha: random(150, 255),
-        vx: random(-0.3,0.3),
-        vy: random(-0.3,0.3)
-      });
-    }
-  }
-
-  for (let i = particles.length - 1; i >= 0; i--) {
-    let p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.alpha -= 1.5;
-    fill(255, p.alpha);
-    noStroke();
-    ellipse(p.x, p.y, p.size);
-    if (p.alpha <= 0) particles.splice(i, 1);
-  }
-
-  drawStars(); // csillagok kirajzolása
-}
 
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight);
 }
-setupStars();
 </script>
 
 </body>
