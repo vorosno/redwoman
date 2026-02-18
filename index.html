@@ -67,7 +67,7 @@
         opacity: 0.7;
     }
 
-    /* LEGÖRDÜLŐ PANEL */
+    /* LEGÖRDÜLŐ PANEL - CSILLAGSZERŰ/AMORF */
     .dropdown-content {
         position: absolute;
         background-color: rgba(0,0,0,0.2); /* 20% opacity */
@@ -75,19 +75,28 @@
         font-family: Futura, sans-serif;
         display: flex;
         flex-direction: column;
-        padding: 10px 0;
-        border-radius: 6px;
-        min-width: 150px;
+        padding: 20px;
+        min-width: 180px;
         opacity: 0; /* kezdő láthatóság */
         pointer-events: none;
         transition: opacity 0.4s ease, transform 0.4s ease;
         z-index: 10;
+
+        /* CSILLAGSZERŰ ALAK */
+        clip-path: polygon(
+            50% 0%, 61% 35%, 98% 35%, 
+            68% 57%, 79% 91%, 50% 70%, 
+            21% 91%, 32% 57%, 2% 35%, 
+            39% 35%
+        );
+        text-align: center;
     }
 
     .dropdown-content a {
         color: white;
         text-decoration: none;
-        padding: 5px 20px;
+        padding: 5px 10px;
+        margin: 5px 0;
     }
 
     .dropdown-content a:hover {
@@ -110,7 +119,7 @@
 
 <a href="rólam.html" class="item" style="top:40%; left:30%;">rólam</a>
 
-<!-- Projektek menü és legördülő -->
+<!-- Projektek menü és csillagszerű legördülő -->
 <a href="#" class="item dropdown" style="top:50%; left:50%;">projektek</a>
 <div class="dropdown-content" id="projects-dropdown">
     <a href="videok.html">Videók</a>
@@ -157,7 +166,7 @@
         });
     });
 
-    // LEGÖRDÜLŐ PANEL ANIMÁCIÓ
+    // CSILLAGSZERŰ LEGÖRDÜLŐ PANEL ANIMÁCIÓ
     const projectsItem = document.querySelector(".dropdown");
     const dropdown = document.getElementById("projects-dropdown");
 
@@ -172,24 +181,24 @@
     projectsItem.addEventListener("mouseenter", () => {
         updateDropdownPosition();
         dropdown.style.opacity = "1";
-        dropdown.style.transform = "translateY(0px)";
+        dropdown.style.transform = "translateY(0px) scale(1)";
         dropdown.style.pointerEvents = "auto";
     });
 
     projectsItem.addEventListener("mouseleave", () => {
         dropdown.style.opacity = "0";
-        dropdown.style.transform = "translateY(-10px)";
+        dropdown.style.transform = "translateY(-10px) scale(0.9)";
         dropdown.style.pointerEvents = "none";
     });
 
     dropdown.addEventListener("mouseenter", () => {
         dropdown.style.opacity = "1";
-        dropdown.style.transform = "translateY(0px)";
+        dropdown.style.transform = "translateY(0px) scale(1)";
         dropdown.style.pointerEvents = "auto";
     });
     dropdown.addEventListener("mouseleave", () => {
         dropdown.style.opacity = "0";
-        dropdown.style.transform = "translateY(-10px)";
+        dropdown.style.transform = "translateY(-10px) scale(0.9)";
         dropdown.style.pointerEvents = "none";
     });
 </script>
