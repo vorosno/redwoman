@@ -70,28 +70,28 @@
     /* LEGÖRDÜLŐ PANEL */
     .dropdown-content {
         position: absolute;
-        top: 70%; /* a projektek menüpont alá */
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: rgba(0,0,0,0.9);
+        background-color: rgba(0,0,0,0.2); /* 20% opacity */
         color: white;
-        display: none; /* alapból rejtett */
+        font-family: Futura, sans-serif;
+        display: flex;
         flex-direction: column;
-        padding: 10px;
-        border-radius: 8px;
-        z-index: 10;
+        padding: 10px 0;
+        border-radius: 6px;
         min-width: 150px;
+        opacity: 0; /* kezdő láthatóság */
+        pointer-events: none;
+        transition: opacity 0.4s ease, transform 0.4s ease;
+        z-index: 10;
     }
 
     .dropdown-content a {
         color: white;
         text-decoration: none;
-        padding: 5px 10px;
-        display: block;
+        padding: 5px 20px;
     }
 
     .dropdown-content a:hover {
-        background-color: rgba(255,255,255,0.2);
+        background-color: rgba(255,255,255,0.15);
         border-radius: 4px;
     }
 </style>
@@ -111,7 +111,7 @@
 <a href="rólam.html" class="item" style="top:40%; left:30%;">rólam</a>
 
 <!-- Projektek menü és legördülő -->
-<a href="projektek.html" class="item dropdown" style="top:50%; left:50%;">projektek</a>
+<a href="#" class="item dropdown" style="top:50%; left:50%;">projektek</a>
 <div class="dropdown-content" id="projects-dropdown">
     <a href="videok.html">Videók</a>
     <a href="kepek.html">Képek</a>
@@ -157,23 +157,40 @@
         });
     });
 
-    // LEGÖRDÜLŐ PANEL
+    // LEGÖRDÜLŐ PANEL ANIMÁCIÓ
     const projectsItem = document.querySelector(".dropdown");
     const dropdown = document.getElementById("projects-dropdown");
 
+    function updateDropdownPosition() {
+        const rect = projectsItem.getBoundingClientRect();
+        dropdown.style.top = rect.bottom + "px";
+        dropdown.style.left = rect.left + "px";
+    }
+    updateDropdownPosition();
+    window.addEventListener("resize", updateDropdownPosition);
+
     projectsItem.addEventListener("mouseenter", () => {
-        dropdown.style.display = "flex";
+        updateDropdownPosition();
+        dropdown.style.opacity = "1";
+        dropdown.style.transform = "translateY(0px)";
+        dropdown.style.pointerEvents = "auto";
     });
 
     projectsItem.addEventListener("mouseleave", () => {
-        dropdown.style.display = "none";
+        dropdown.style.opacity = "0";
+        dropdown.style.transform = "translateY(-10px)";
+        dropdown.style.pointerEvents = "none";
     });
 
     dropdown.addEventListener("mouseenter", () => {
-        dropdown.style.display = "flex";
+        dropdown.style.opacity = "1";
+        dropdown.style.transform = "translateY(0px)";
+        dropdown.style.pointerEvents = "auto";
     });
     dropdown.addEventListener("mouseleave", () => {
-        dropdown.style.display = "none";
+        dropdown.style.opacity = "0";
+        dropdown.style.transform = "translateY(-10px)";
+        dropdown.style.pointerEvents = "none";
     });
 </script>
 
