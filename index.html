@@ -14,7 +14,7 @@
         position: relative;
     }
 
-    /* Slider felül középen */
+    /* SLIDER */
     .slider {
         position: absolute;
         top: 40px;
@@ -69,12 +69,12 @@
 </head>
 <body>
 
-<!-- KÉPSLIDER -->
+<!-- KÉPEK (nincs mappa, nagybetűs .JPG) -->
 <div class="slider">
-    <img src="images/barany1.JPG" class="active">
-    <img src="images/barany2.JPG">
-    <img src="images/barany3.JPG">
-    <img src="images/barany4.JPG">
+    <img src="barany1.JPG" class="active">
+    <img src="barany2.JPG">
+    <img src="barany3.JPG">
+    <img src="barany4.JPG">
 </div>
 
 <h1 class="big-title">én vagyok</h1>
@@ -84,7 +84,7 @@
 <a href="kapcsolat.html" class="item" style="top:60%; left:70%;">kapcsolat</a>
 
 <script>
-    // KÉP VÁLTÁS
+    // SLIDER LOGIKA
     const slides = document.querySelectorAll(".slider img");
     let current = 0;
 
@@ -122,4 +122,3 @@
 
 </body>
 </html>
-
