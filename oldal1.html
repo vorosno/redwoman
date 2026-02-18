@@ -46,7 +46,6 @@ button#reset-btn:hover {
     width: 500px;
     height: 500px;
     margin-top: 20px;
-    z-index: 10;
 }
 
 #resultText {
@@ -77,7 +76,6 @@ let currentPlayer = 'X';
 let gameOver = false;
 let winner = null;
 let canvas;
-let explosion = []; // robbanás részecskék
 
 function setup() {
   canvas = createCanvas(450, 450);
@@ -109,20 +107,6 @@ function draw() {
       text(board[i][j], xPos, yPos);
     }
   }
-
-  // színes robbanás
-  for(let i = explosion.length-1; i>=0; i--){
-    let p = explosion[i];
-    fill(p.r, p.g, p.b, p.alpha);
-    noStroke();
-    ellipse(p.x, p.y, p.size);
-    p.x += p.vx;
-    p.y += p.vy;
-    p.alpha -= 3; // lassú eltűnés
-    if(p.alpha <= 0){
-      explosion.splice(i,1);
-    }
-  }
 }
 
 function mousePressed(){
@@ -140,7 +124,7 @@ function mousePressed(){
       gameOver = true;
       showResult("Döntetlen!");
     } else {
-      setTimeout(aiMove, 500); // fél másodperces késleltetés
+      setTimeout(aiMove, 500); // AI késleltetés
     }
   }
 }
@@ -196,7 +180,6 @@ function initBoard(){
   currentPlayer = 'X';
   gameOver = false;
   winner = null;
-  explosion = [];
   loop();
   document.getElementById('winnerGif').style.display = 'none';
   document.getElementById('winnerGif').src = '';
@@ -204,21 +187,6 @@ function initBoard(){
 }
 
 function showWinner(){
-  // színes robbanás generálás
-  for(let i=0;i<100;i++){
-    explosion.push({
-      x: random(width/2-50, width/2+50),
-      y: random(height/2-50, height/2+50),
-      vx: random(-5,5),
-      vy: random(-5,5),
-      size: random(8,20),
-      alpha: 255,
-      r: random(200,255),
-      g: random(100,255),
-      b: random(100,255)
-    });
-  }
-
   if(winner === 'X'){
     document.getElementById('winnerGif').src = 'csotany.gif';
     document.getElementById('resultText').innerText = "Te nyertél!";
