@@ -102,11 +102,11 @@ function draw() {
   if(gameOver && winner){
     imageMode(CENTER);
     image(winnerGif, width/2, height/2, width, height);
-    noLoop();
+  
   } else if(gameOver && !winner){
   imageMode(CENTER);
     image(winner1Gif, width/2, height/2, width, height);
-    noLoop();
+    
   }
 }
 
