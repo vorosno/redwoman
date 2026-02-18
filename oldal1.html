@@ -44,13 +44,9 @@ button#reset-btn:hover {
 /* Nyertes GIF stílus */
 #winnerGif {
     display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    z-index: 10;
+    width: 300px;
+    height: 300px;
+    margin-top: 10px;
 }
 
 /* Döntetlen / nyertes szöveg alatt */
@@ -74,7 +70,7 @@ button#reset-btn:hover {
 <div id="resultText"></div>
 
 <!-- Nyertes GIF -->
-<img id="winnerGif" src="csotany.gif" alt="Nyertes">
+<img id="winnerGif" src="" alt="Nyertes">
 
 <script>
 let board;
@@ -91,7 +87,7 @@ function setup() {
   w = width / 3;
   h = height / 3;
   initBoard();
-  textSize(96); // nagyobb X/O
+  textSize(96);
   textAlign(CENTER, CENTER);
 }
 
@@ -99,7 +95,7 @@ function draw() {
   clear(); // átlátszó canvas
 
   stroke(255);
-  strokeWeight(6); // vastagabb rács
+  strokeWeight(6);
   // rács
   line(w, 0, w, height);
   line(2*w, 0, 2*w, height);
@@ -195,19 +191,27 @@ function initBoard(){
   winner = null;
   loop();
   document.getElementById('winnerGif').style.display = 'none';
+  document.getElementById('winnerGif').src = '';
   document.getElementById('resultText').innerText = "";
 }
 
 // Nyertes GIF megjelenítése
 function showWinner(){
+  if(winner === 'X'){
+    document.getElementById('winnerGif').src = 'csotany.gif';
+    document.getElementById('resultText').innerText = "Te nyertél!";
+  } else if(winner === 'O'){
+    document.getElementById('winnerGif').src = 'csiga.gif';
+    document.getElementById('resultText').innerText = "A gép nyert!";
+  }
   document.getElementById('winnerGif').style.display = 'block';
-  document.getElementById('resultText').innerText = winner + " nyert!";
   noLoop();
 }
 
 // Döntetlen szöveg megjelenítése
 function showResult(text){
   document.getElementById('resultText').innerText = text;
+  document.getElementById('winnerGif').style.display = 'none';
   noLoop();
 }
 
