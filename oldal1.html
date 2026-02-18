@@ -8,7 +8,7 @@
 body {
     margin: 0;
     height: 100vh;
-    background-color: #B32714;
+    background: transparent;
     font-family: Futura, sans-serif;
     display: flex;
     flex-direction: column;
@@ -43,12 +43,12 @@ button#reset-btn:hover {
 </head>
 <body>
 
-<a href="rolam.html" class="back">vissza</a>
+<a href="rólam.html" class="back">vissza</a>
 
 <h1 style="color:white;">tic-tac-toe</h1>
 <p style="color:white;">játssz!</p>
 
-<button id="reset-btn">újra kell</button>
+<button id="reset-btn">újra</button>
 
 <script>
 let board;
@@ -61,8 +61,6 @@ let canvas;
 
 function preload() {
   winnerGif = loadImage('csotany.gif'); // nyertes GIF
-    function preload() {
-  winner2Gif = loadImage('csiga.gif'); // dontetlen GIF
 }
 
 function setup() {
@@ -101,12 +99,13 @@ function draw() {
   // nyertes GIF
   if(gameOver && winner){
     imageMode(CENTER);
-    image(winnerGif, width/5, height/5, width, height);
-  
+    image(winnerGif, width/2, height/2, width, height);
+    noLoop();
   } else if(gameOver && !winner){
-  imageMode(CENTER);
-    image(winner1Gif, width/5, height/5, width, height);
-    
+    textSize(32);
+    fill(255);
+    text("basszus!", width/2, height/2);
+    noLoop();
   }
 }
 
