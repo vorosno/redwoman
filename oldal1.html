@@ -38,7 +38,7 @@ button#reset-btn {
 
 button#reset-btn:hover {
     background: white;
-    color: #D43B19; /* kontraszt hover */
+    color: #D43B19; 
 }
 
 /* Nyertes GIF stílus */
@@ -48,9 +48,18 @@ button#reset-btn:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
     z-index: 10;
+}
+
+/* Döntetlen / nyertes szöveg alatt */
+#resultText {
+    color: white;
+    font-size: 28px;
+    margin-top: 10px;
+    min-height: 34px;
+    text-align: center;
 }
 </style>
 </head>
@@ -59,9 +68,10 @@ button#reset-btn:hover {
 <a href="rólam.html" class="back">vissza</a>
 
 <h1 style="color:white;">Tic-Tac-Toe</h1>
-<p style="color:white;">Játssz az X-el, a gép O-val játszik!</p>
+<p style="color:white;">Játssz az X-el, a gép O-val!</p>
 
 <button id="reset-btn">Új játék</button>
+<div id="resultText"></div>
 
 <!-- Nyertes GIF -->
 <img id="winnerGif" src="csotany.gif" alt="Nyertes">
@@ -75,13 +85,13 @@ let winner = null;
 let canvas;
 
 function setup() {
-  canvas = createCanvas(300, 300);
+  canvas = createCanvas(450, 450); // nagyobb tábla
   canvas.parent(document.body);
   canvas.style('margin-top','20px');
   w = width / 3;
   h = height / 3;
   initBoard();
-  textSize(64);
+  textSize(96); // nagyobb X/O
   textAlign(CENTER, CENTER);
 }
 
@@ -89,7 +99,7 @@ function draw() {
   clear(); // átlátszó canvas
 
   stroke(255);
-  strokeWeight(4);
+  strokeWeight(6); // vastagabb rács
   // rács
   line(w, 0, w, height);
   line(2*w, 0, 2*w, height);
@@ -106,24 +116,9 @@ function draw() {
       text(board[i][j], xPos, yPos);
     }
   }
-
-  // Nyertes GIF vagy döntetlen szöveg
-  if(gameOver){
-    if(winner){
-      document.getElementById('winnerGif').style.display = 'block';
-      noLoop();
-    } else {
-      fill(255);
-      textSize(32);
-      textAlign(CENTER, CENTER);
-      text("Döntetlen!", width/2, height/2);
-      noLoop();
-    }
-  } else {
-    document.getElementById('winnerGif').style.display = 'none';
-  }
 }
 
+// Ember lépése
 function mousePressed(){
   if(gameOver) return;
   let j = floor(mouseX / w);
@@ -133,9 +128,11 @@ function mousePressed(){
     if(checkWinner('X')){
       winner = 'X';
       gameOver = true;
+      showWinner();
     } else if(isBoardFull()){
       winner = null;
       gameOver = true;
+      showResult("Döntetlen!");
     } else {
       aiMove();
     }
@@ -156,9 +153,11 @@ function aiMove(){
     if(checkWinner('O')){
       winner = 'O';
       gameOver = true;
+      showWinner();
     } else if(isBoardFull()){
       winner = null;
       gameOver = true;
+      showResult("Döntetlen!");
     }
   }
 }
@@ -196,6 +195,20 @@ function initBoard(){
   winner = null;
   loop();
   document.getElementById('winnerGif').style.display = 'none';
+  document.getElementById('resultText').innerText = "";
+}
+
+// Nyertes GIF megjelenítése
+function showWinner(){
+  document.getElementById('winnerGif').style.display = 'block';
+  document.getElementById('resultText').innerText = winner + " nyert!";
+  noLoop();
+}
+
+// Döntetlen szöveg megjelenítése
+function showResult(text){
+  document.getElementById('resultText').innerText = text;
+  noLoop();
 }
 
 // Reset gomb
