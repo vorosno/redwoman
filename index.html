@@ -19,8 +19,7 @@ body {
     color: white;
 }
 
-/* ================= TOP BAR ================= */
-
+/* ===== TOP BAR ===== */
 .topbar {
     position: fixed;
     top: 0;
@@ -74,8 +73,7 @@ body {
     margin: 6px 0;
 }
 
-/* ================= MOZGÓ BETŰK ================= */
-
+/* ===== BETŰ HÁTTÉR ===== */
 .letter-layer {
     position: fixed;
     top: 0;
@@ -83,7 +81,7 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
     overflow: hidden;
 }
 
@@ -100,16 +98,21 @@ body {
     to { transform: translateX(-100%); }
 }
 
-/* ================= EREDETI STÍLUSOK ================= */
+/* ===== BIZTOS ELŐTÉR ===== */
+.slider,
+.big-title,
+.item,
+.dropdown-content {
+    position: relative;
+    z-index: 2;
+}
 
+/* ===== EREDETI STÍLUS ===== */
 .slider {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-top: 80px;
     display: flex;
     gap: 20px;
-    z-index: 2;
+    justify-content: center;
 }
 
 .slider img {
@@ -131,7 +134,6 @@ body {
     font-size: 90px;
     letter-spacing: 3px;
     user-select: none;
-    z-index: 2;
 }
 
 .item {
@@ -141,15 +143,6 @@ body {
     user-select: none;
     text-decoration: none;
     color: white;
-    z-index: 2;
-}
-
-.item:active {
-    cursor: grabbing;
-}
-
-.item:hover {
-    opacity: 0.7;
 }
 
 .dropdown-content {
@@ -171,17 +164,12 @@ body {
     text-decoration: none;
     padding: 5px 20px;
 }
-
-.dropdown-content a:hover {
-    background-color: rgba(255,255,255,0.15);
-    border-radius: 4px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- ================= TOP BAR ================= -->
+<div class="letter-layer" id="letterLayer"></div>
 
 <div class="topbar">
     <div>
@@ -204,12 +192,6 @@ body {
     <a href="#">4</a>
 </div>
 
-<!-- ================= MOZGÓ BETŰ HÁTTÉR ================= -->
-
-<div class="letter-layer" id="letterLayer"></div>
-
-<!-- ================= EREDETI TARTALOM ================= -->
-
 <div class="slider">
     <img src="barany1.JPG">
     <img src="barany2.JPG">
@@ -220,7 +202,6 @@ body {
 <h1 class="big-title">én vagyok</h1>
 
 <a href="rólam.html" class="item" style="top:40%; left:30%;">rólam</a>
-
 <a href="#" class="item dropdown" style="top:50%; left:50%;">projektek</a>
 
 <div class="dropdown-content" id="projects-dropdown">
@@ -231,9 +212,18 @@ body {
 
 <a href="kapcsolat.html" class="item" style="top:60%; left:70%;">kapcsolat</a>
 
-<!-- ================= JAVASCRIPT ================= -->
-
 <script>
+// SLIDER
+const slides = document.querySelectorAll(".slider img");
+let current = 0;
+slides[current].classList.add("active");
+
+setInterval(() => {
+    slides[current].classList.remove("active");
+    current = (current + 1) % slides.length;
+    slides[current].classList.add("active");
+}, 2000);
+
 // HAMBURGER
 const hamburger = document.getElementById("hamburger");
 const hamburgerMenu = document.getElementById("hamburgerMenu");
