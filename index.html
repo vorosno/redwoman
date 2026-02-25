@@ -4,88 +4,115 @@
 <meta charset="UTF-8">
 <title>helloo</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
-
 <style>
 body {
     margin: 0;
     height: 100vh;
-    background-color: #B32714;
+    background: #B32714;
     font-family: Futura, sans-serif;
     color: white;
     overflow-x: hidden;
 }
 
-/* ===== GRAIN RÉTEG ===== */
+/* ================= ERŐSEBB, ÉLESEBB GRAIN ================= */
+
 .grain {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.15;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
 }
 
-/* ===== ÁTLÁTSZÓ TOP ===== */
+/* ================= TOP MENÜ ================= */
+
 .topbar {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 70px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
 }
 
-/* ===== KÖZÉPSŐ MENÜ IKON ===== */
+/* MENÜ KÖZÉPEN */
+
 .menu-wrapper {
     position: relative;
+    padding: 20px;
 }
 
 .menu-icon {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
     cursor: pointer;
 }
 
 .menu-icon span {
-    width: 28px;
+    width: 32px;
     height: 2px;
     background: white;
 }
 
-/* ===== LENYÍLÓ MENÜ ===== */
+/* JAVÍTOTT LENYÍLÓ MENÜ */
+
 .menu-dropdown {
     position: absolute;
-    top: 40px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     display: none;
     flex-direction: column;
-    text-align: center;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.menu-wrapper:hover .menu-dropdown,
+.menu-dropdown:hover {
+    display: flex;
 }
 
 .menu-dropdown a {
     text-decoration: none;
     color: white;
-    margin: 6px 0;
-    font-size: 14px;
+    margin: 8px 0;
     letter-spacing: 2px;
 }
 
-.menu-wrapper:hover .menu-dropdown {
-    display: flex;
+/* ================= MOZGÓ BETŰK ================= */
+
+.letter-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
 }
 
-/* ===== SLIDER ===== */
+.letter-line {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 18px;
+    opacity: 0.08;
+    animation: moveLeft linear infinite;
+}
+
+@keyframes moveLeft {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+}
+
+/* ================= SLIDER ================= */
+
 .slider {
     position: absolute;
-    top: 120px;
+    top: 130px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -105,40 +132,30 @@ body {
     opacity: 1;
 }
 
-/* ===== CÍM ===== */
+/* ================= CÍM ================= */
+
 .big-title {
     position: absolute;
     bottom: 40px;
     left: 40px;
     font-size: 90px;
     letter-spacing: 3px;
-    user-select: none;
     z-index: 2;
 }
 
-/* ===== MOZGÓ BETŰK ===== */
-.letter-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-}
+/* ================= FÜLEK ================= */
 
-.letter-line {
+.item {
     position: absolute;
-    white-space: nowrap;
-    font-size: 18px;
-    opacity: 0.08;
-    animation: moveLeft linear infinite;
+    font-size: 28px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    z-index: 2;
 }
 
-@keyframes moveLeft {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
+.item:hover {
+    opacity: 0.6;
 }
 </style>
 </head>
@@ -148,7 +165,8 @@ body {
 <div class="grain"></div>
 <div class="letter-layer" id="letterLayer"></div>
 
-<!-- ===== TOP MENÜ ===== -->
+<!-- ================= TOP MENÜ ================= -->
+
 <div class="topbar">
     <div class="menu-wrapper">
         <div class="menu-icon">
@@ -156,6 +174,7 @@ body {
             <span></span>
             <span></span>
         </div>
+
         <div class="menu-dropdown">
             <a href="#">valami 1</a>
             <a href="#">valami 2</a>
@@ -164,7 +183,8 @@ body {
     </div>
 </div>
 
-<!-- ===== SLIDER ===== -->
+<!-- ================= SLIDER ================= -->
+
 <div class="slider">
     <img src="barany1.JPG">
     <img src="barany2.JPG">
@@ -174,8 +194,15 @@ body {
 
 <h1 class="big-title">én vagyok</h1>
 
+<!-- VISSZATETT FÜLEK -->
+
+<a href="rólam.html" class="item" style="top:50%; left:20%;">rólam</a>
+<a href="projektek.html" class="item" style="top:60%; left:50%;">projektek</a>
+<a href="kapcsolat.html" class="item" style="top:70%; left:75%;">kapcsolat</a>
+
 <script>
-// ===== SLIDER =====
+/* ================= SLIDER ================= */
+
 const slides = document.querySelectorAll(".slider img");
 let current = 0;
 slides[current].classList.add("active");
@@ -186,15 +213,16 @@ setInterval(() => {
     slides[current].classList.add("active");
 }, 2000);
 
-// ===== MOZGÓ BETŰK =====
+/* ================= MOZGÓ BETŰK ================= */
+
 const layer = document.getElementById("letterLayer");
 const abc = "abcdefghijklmnopqrstuvwxyz";
 const words = ["szerelem","idő","város","álom","ember","csend","fény","tér","kutya","ház"];
 
 function generateLine() {
     let text = "";
-    for (let i = 0; i < 160; i++) {
-        if (Math.random() < 0.015) {
+    for (let i = 0; i < 180; i++) {
+        if (Math.random() < 0.02) {
             text += " " + words[Math.floor(Math.random()*words.length)] + " ";
         } else {
             text += abc[Math.floor(Math.random()*abc.length)];
@@ -203,11 +231,11 @@ function generateLine() {
     return text;
 }
 
-for (let i = 0; i < 25; i++) {
+for (let i = 0; i < 30; i++) {
     const line = document.createElement("div");
     line.className = "letter-line";
-    line.style.top = (i * 35) + "px";
-    line.style.animationDuration = (25 + Math.random()*20) + "s";
+    line.style.top = (i * 30) + "px";
+    line.style.animationDuration = (20 + Math.random()*20) + "s";
     line.textContent = generateLine();
     layer.appendChild(line);
 }
