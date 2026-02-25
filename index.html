@@ -14,7 +14,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ================= ERŐSEBB, ÉLESEBB GRAIN ================= */
+/* ================= ERŐS GRAIN ================= */
 
 .grain {
     position: fixed;
@@ -40,8 +40,6 @@ body {
     z-index: 9999;
 }
 
-/* MENÜ KÖZÉPEN */
-
 .menu-wrapper {
     position: relative;
     padding: 20px;
@@ -60,7 +58,7 @@ body {
     background: white;
 }
 
-/* JAVÍTOTT LENYÍLÓ MENÜ */
+/* HAMBURGER LENYÍLÓ */
 
 .menu-dropdown {
     position: absolute;
@@ -157,6 +155,37 @@ body {
 .item:hover {
     opacity: 0.6;
 }
+
+/* ================= PROJEKTEK LENYÍLÓ ================= */
+
+.projects-wrapper {
+    position: absolute;
+    z-index: 2;
+}
+
+.projects-dropdown {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    display: none;
+    flex-direction: column;
+    background: rgba(0,0,0,0.3);
+    padding: 10px 15px;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+}
+
+.projects-dropdown a {
+    text-decoration: none;
+    color: white;
+    margin: 6px 0;
+    font-size: 16px;
+}
+
+.projects-wrapper:hover .projects-dropdown,
+.projects-dropdown:hover {
+    display: flex;
+}
 </style>
 </head>
 
@@ -194,10 +223,19 @@ body {
 
 <h1 class="big-title">én vagyok</h1>
 
-<!-- VISSZATETT FÜLEK -->
+<!-- ================= ALSÓ FÜLEK ================= -->
 
 <a href="rólam.html" class="item" style="top:50%; left:20%;">rólam</a>
-<a href="projektek.html" class="item" style="top:60%; left:50%;">projektek</a>
+
+<div class="projects-wrapper" style="top:60%; left:50%;">
+    <div class="item">projektek</div>
+    <div class="projects-dropdown">
+        <a href="videok.html">Videók</a>
+        <a href="kepek.html">Képek</a>
+        <a href="mindenfelek.html">Mindenfélék</a>
+    </div>
+</div>
+
 <a href="kapcsolat.html" class="item" style="top:70%; left:75%;">kapcsolat</a>
 
 <script>
@@ -243,3 +281,4 @@ for (let i = 0; i < 30; i++) {
 
 </body>
 </html>
+
