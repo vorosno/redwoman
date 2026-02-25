@@ -9,13 +9,13 @@ body {
     margin: 0;
     height: 100vh;
     background: #B32714;
-    font-family: "Futura PT", "Futura", sans-serif;
+    font-family: "Futura PT","Futura",sans-serif;
     font-weight: 300;
     color: white;
     overflow-x: hidden;
 }
 
-/* ================= ERŐS GRAIN ================= */
+/* ===== GRAIN ===== */
 
 .grain {
     position: fixed;
@@ -28,7 +28,7 @@ body {
     mix-blend-mode: overlay;
 }
 
-/* ================= TOP MENÜ ================= */
+/* ===== TOP MENÜ ===== */
 
 .topbar {
     position: fixed;
@@ -43,7 +43,6 @@ body {
 
 .menu-wrapper {
     position: relative;
-    padding: 30px;
 }
 
 .menu-icon {
@@ -59,8 +58,6 @@ body {
     background: white;
 }
 
-/* Fade dropdown */
-
 .menu-dropdown {
     position: absolute;
     top: 70px;
@@ -74,7 +71,7 @@ body {
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.menu-wrapper:hover .menu-dropdown {
+.menu-dropdown.show {
     opacity: 1;
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
@@ -85,10 +82,9 @@ body {
     color: white;
     margin: 10px 0;
     letter-spacing: 3px;
-    font-weight: 300;
 }
 
-/* ================= MOZGÓ BETŰK ================= */
+/* ===== MOZGÓ BETŰK ===== */
 
 .letter-layer {
     position: fixed;
@@ -111,7 +107,7 @@ body {
     to { transform: translateX(-100%); }
 }
 
-/* ================= SLIDER ================= */
+/* ===== SLIDER ===== */
 
 .slider {
     position: absolute;
@@ -135,7 +131,7 @@ body {
     opacity: 1;
 }
 
-/* ================= CÍM ================= */
+/* ===== CÍM ===== */
 
 .big-title {
     position: absolute;
@@ -144,10 +140,9 @@ body {
     font-size: 90px;
     letter-spacing: 3px;
     z-index: 2;
-    font-weight: 300;
 }
 
-/* ================= FÜLEK ================= */
+/* ===== FÜLEK ===== */
 
 .item {
     position: absolute;
@@ -156,7 +151,6 @@ body {
     text-decoration: none;
     color: white;
     z-index: 2;
-    font-weight: 300;
     letter-spacing: 2px;
     transition: opacity 0.3s ease;
 }
@@ -165,7 +159,7 @@ body {
     opacity: 0.5;
 }
 
-/* ================= PROJEKTEK LENYÍLÓ ================= */
+/* ===== PROJEKTEK ===== */
 
 .projects-wrapper {
     position: absolute;
@@ -184,7 +178,7 @@ body {
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.projects-wrapper:hover .projects-dropdown {
+.projects-dropdown.show {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
@@ -195,8 +189,6 @@ body {
     color: white;
     margin: 8px 0;
     font-size: 16px;
-    letter-spacing: 2px;
-    font-weight: 300;
 }
 </style>
 </head>
@@ -206,17 +198,17 @@ body {
 <div class="grain"></div>
 <div class="letter-layer" id="letterLayer"></div>
 
-<!-- ================= TOP MENÜ ================= -->
+<!-- ===== TOP MENÜ ===== -->
 
 <div class="topbar">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" id="mainMenu">
         <div class="menu-icon">
             <span></span>
             <span></span>
             <span></span>
         </div>
 
-        <div class="menu-dropdown">
+        <div class="menu-dropdown" id="menuDropdown">
             <a href="#">valami 1</a>
             <a href="#">valami 2</a>
             <a href="#">valami 3</a>
@@ -224,7 +216,7 @@ body {
     </div>
 </div>
 
-<!-- ================= SLIDER ================= -->
+<!-- ===== SLIDER ===== -->
 
 <div class="slider">
     <img src="barany1.JPG">
@@ -237,9 +229,9 @@ body {
 
 <a href="rólam.html" class="item" style="top:50%; left:20%;">rólam</a>
 
-<div class="projects-wrapper" style="top:60%; left:50%;">
+<div class="projects-wrapper" style="top:60%; left:50%;" id="projectsMenu">
     <div class="item">projektek</div>
-    <div class="projects-dropdown">
+    <div class="projects-dropdown" id="projectsDropdown">
         <a href="videok.html">Videók</a>
         <a href="kepek.html">Képek</a>
         <a href="mindenfelek.html">Mindenfélék</a>
@@ -249,7 +241,8 @@ body {
 <a href="kapcsolat.html" class="item" style="top:70%; left:75%;">kapcsolat</a>
 
 <script>
-/* SLIDER */
+/* ===== SLIDER ===== */
+
 const slides = document.querySelectorAll(".slider img");
 let current = 0;
 slides[current].classList.add("active");
@@ -260,10 +253,33 @@ setInterval(() => {
     slides[current].classList.add("active");
 }, 2000);
 
-/* MOZGÓ BETŰK */
+/* ===== STABIL MENÜ LOGIKA ===== */
+
+function stableMenu(wrapperId, dropdownId) {
+    const wrapper = document.getElementById(wrapperId);
+    const dropdown = document.getElementById(dropdownId);
+    let timeout;
+
+    wrapper.addEventListener("mouseenter", () => {
+        clearTimeout(timeout);
+        dropdown.classList.add("show");
+    });
+
+    wrapper.addEventListener("mouseleave", () => {
+        timeout = setTimeout(() => {
+            dropdown.classList.remove("show");
+        }, 200); // kis késleltetés, hogy ne villogjon
+    });
+}
+
+stableMenu("mainMenu","menuDropdown");
+stableMenu("projectsMenu","projectsDropdown");
+
+/* ===== MOZGÓ BETŰK ===== */
+
 const layer = document.getElementById("letterLayer");
 const abc = "abcdefghijklmnopqrstuvwxyz";
-const words = ["szerelem","idő","mindenkinek","álom","ember","csend","fény","tér","haladás","érték"];
+const words = ["szerelem","idő","város","álom","ember","csend","fény","tér","kutya","ház"];
 
 function generateLine() {
     let text = "";
