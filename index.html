@@ -1,107 +1,178 @@
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-<meta charset="UTF-8">
-<title>helloo</title>
 
-<!-- p5.js könyvtár -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
-
-<style>
-   body {
-    margin: 0;
-    height: 100vh;
-    background-color: #B32714; /* fallback szín, ha a kép nem töltődik */
-    background-image: url('kep2.jpeg'); /* a feltöltött kép */
-    background-size: cover;   /* kitölti a teljes hátteret, arányosan */
-    background-position: center; /* középre igazítás */
-    background-repeat: no-repeat; /* ne ismétlődjön */
-    font-family: Futura, sans-serif;
-    color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    background: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    z-index: 1000;
 }
 
-    /* SLIDER - egy sorban */
-    .slider {
-        position: absolute;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 20px;
-    }
+.topbar a {
+    color: black;
+    text-decoration: none;
+    margin-right: 20px;
+}
 
-    .slider img {
-        width: 200px;
-        height: 130px;
-        object-fit: cover;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
+.topbar a:hover {
+    opacity: 0.6;
+}
 
-    .slider img.active {
-        opacity: 1;
-    }
+/* ===== HAMBURGER ===== */
+.hamburger {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
 
-    /* Nagy fix felirat bal alul */
-    .big-title {
-        position: absolute;
-        bottom: 40px;
-        left: 40px;
-        font-size: 90px;
-        color: white;
-        letter-spacing: 3px;
-        user-select: none;
-    }
+.hamburger span {
+    width: 22px;
+    height: 2px;
+    background: black;
+}
 
-    .item {
-        position: absolute;
-        font-size: 28px;
-        color: white;
-        cursor: grab;
-        user-select: none;
-        text-decoration: none;
-    }
+/* ===== HAMBURGER MENÜ ===== */
+.hamburger-menu {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    background: white;
+    color: black;
+    display: none;
+    flex-direction: column;
+    padding: 15px 25px;
+    z-index: 1000;
+}
 
-    .item:active {
-        cursor: grabbing;
-    }
+.hamburger-menu a {
+    color: black;
+    text-decoration: none;
+    margin: 5px 0;
+}
 
-    .item:hover {
-        opacity: 0.7;
-    }
+/* ===== MOZGÓ BETŰ SZALAG ===== */
+.letter-stream {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 50px);
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
 
-    /* LEGÖRDÜLŐ PANEL */
-    .dropdown-content {
-        position: absolute;
-        background-color: rgba(0,0,0,0.2); /* 20% opacity */
-        color: white;
-        font-family: Futura, sans-serif;
-        display: flex;
-        flex-direction: column;
-        padding: 10px 0;
-        border-radius: 6px;
-        min-width: 150px;
-        opacity: 0; /* kezdő láthatóság */
-        pointer-events: none;
-        transition: opacity 0.4s ease, transform 0.4s ease;
-        z-index: 10;
-    }
+.stream-line {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 20px;
+    opacity: 0.15;
+    animation: moveLeft linear infinite;
+}
 
-    .dropdown-content a {
-        color: white;
-        text-decoration: none;
-        padding: 5px 20px;
-    }
+@keyframes moveLeft {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+}
 
-    .dropdown-content a:hover {
-        background-color: rgba(255,255,255,0.15);
-        border-radius: 4px;
-    }
+/* ===== EREDETI STÍLUSOK ===== */
+.slider {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 2;
+}
+
+.slider img {
+    width: 200px;
+    height: 130px;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.slider img.active {
+    opacity: 1;
+}
+
+.big-title {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    font-size: 90px;
+    letter-spacing: 3px;
+    user-select: none;
+    z-index: 2;
+}
+
+.item {
+    position: absolute;
+    font-size: 28px;
+    cursor: grab;
+    user-select: none;
+    text-decoration: none;
+    z-index: 2;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    border-radius: 6px;
+    min-width: 150px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 10;
+}
+
+.dropdown-content a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 20px;
+}
 </style>
 </head>
 <body>
 
-<!-- KÉPEK -->
+<!-- FELSŐ SÁV -->
+<div class="topbar">
+    <div>
+        <a href="#">Link1</a>
+        <a href="#">Link2</a>
+        <a href="#">Link3</a>
+    </div>
+
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+<div class="hamburger-menu" id="hamburgerMenu">
+    <a href="#">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+    <a href="#">4</a>
+</div>
+
+<!-- MOZGÓ BETŰK -->
+<div class="letter-stream" id="letterStream"></div>
+
+<!-- EREDETI TARTALOM -->
 <div class="slider">
     <img src="barany1.JPG">
     <img src="barany2.JPG">
@@ -112,139 +183,47 @@
 <h1 class="big-title">én vagyok</h1>
 
 <a href="rólam.html" class="item" style="top:40%; left:30%;">rólam</a>
-
-<!-- Projektek menü és legördülő -->
 <a href="#" class="item dropdown" style="top:50%; left:50%;">projektek</a>
 <div class="dropdown-content" id="projects-dropdown">
     <a href="videok.html">Videók</a>
     <a href="kepek.html">Képek</a>
     <a href="mindenfelek.html">Mindenfélék</a>
 </div>
-
 <a href="kapcsolat.html" class="item" style="top:60%; left:70%;">kapcsolat</a>
 
-<!-- SLIDER és menüpontok logika -->
 <script>
-    // SLIDER LOGIKA
-    const slides = document.querySelectorAll(".slider img");
-    let current = 0;
-    slides[current].classList.add("active");
+// HAMBURGER TOGGLE
+const hamburger = document.getElementById("hamburger");
+const hamburgerMenu = document.getElementById("hamburgerMenu");
+hamburger.addEventListener("click", () => {
+    hamburgerMenu.style.display =
+        hamburgerMenu.style.display === "flex" ? "none" : "flex";
+});
 
-    setInterval(() => {
-        slides[current].classList.remove("active");
-        current = (current + 1) % slides.length;
-        slides[current].classList.add("active");
-    }, 2000);
+// BETŰ SZALAG GENERÁLÁS
+const stream = document.getElementById("letterStream");
+const abc = "abcdefghijklmnopqrstuvwxyz";
+const hungarianWords = ["szerelem","kutya","ház","város","álom","fény","csend","ember","idő","tér"];
 
-    // HÚZHATÓ MENÜPONTOK
-    const items = document.querySelectorAll(".item");
-
-    items.forEach(item => {
-        let offsetX, offsetY, isDragging = false;
-
-        item.addEventListener("mousedown", (e) => {
-            isDragging = true;
-            offsetX = e.clientX - item.offsetLeft;
-            offsetY = e.clientY - item.offsetTop;
-        });
-
-        document.addEventListener("mousemove", (e) => {
-            if (isDragging) {
-                item.style.left = (e.clientX - offsetX) + "px";
-                item.style.top = (e.clientY - offsetY) + "px";
-            }
-        });
-
-        document.addEventListener("mouseup", () => {
-            isDragging = false;
-        });
-    });
-
-    // LEGÖRDÜLŐ PANEL ANIMÁCIÓ
-    const projectsItem = document.querySelector(".dropdown");
-    const dropdown = document.getElementById("projects-dropdown");
-
-    function updateDropdownPosition() {
-        const rect = projectsItem.getBoundingClientRect();
-        dropdown.style.top = rect.bottom + "px";
-        dropdown.style.left = rect.left + "px";
+function randomLine() {
+    let text = "";
+    for (let i = 0; i < 120; i++) {
+        if (Math.random() < 0.02) {
+            text += " " + hungarianWords[Math.floor(Math.random()*hungarianWords.length)] + " ";
+        } else {
+            text += abc[Math.floor(Math.random()*abc.length)];
+        }
     }
-    updateDropdownPosition();
-    window.addEventListener("resize", updateDropdownPosition);
-
-    projectsItem.addEventListener("mouseenter", () => {
-        updateDropdownPosition();
-        dropdown.style.opacity = "1";
-        dropdown.style.transform = "translateY(0px)";
-        dropdown.style.pointerEvents = "auto";
-    });
-
-    projectsItem.addEventListener("mouseleave", () => {
-        dropdown.style.opacity = "0";
-        dropdown.style.transform = "translateY(-10px)";
-        dropdown.style.pointerEvents = "none";
-    });
-
-    dropdown.addEventListener("mouseenter", () => {
-        dropdown.style.opacity = "1";
-        dropdown.style.transform = "translateY(0px)";
-        dropdown.style.pointerEvents = "auto";
-    });
-    dropdown.addEventListener("mouseleave", () => {
-        dropdown.style.opacity = "0";
-        dropdown.style.transform = "translateY(-10px)";
-        dropdown.style.pointerEvents = "none";
-    });
-</script>
-
-<!-- PORSZERŰ EGÉRKÖVETŐ EFFEKT p5.js -->
-<script>
-let particles = [];
-
-function setup() {
-  let canvas = createCanvas(window.innerWidth, window.innerHeight);
-  canvas.position(0, 0);
-  canvas.style('z-index', '-1');
-  canvas.style('pointer-events', 'none');
-  background(179, 39, 20);
-  smooth();
+    return text;
 }
 
-function draw() {
-  fill(179, 39, 20, 15);
-  noStroke();
-  rect(0, 0, width, height);
-
-  if (mouseX != pmouseX || mouseY != pmouseY) {
-    for (let i = 0; i < 12; i++) {
-      particles.push({
-        x: mouseX + random(-5,5),
-        y: mouseY + random(-5,5),
-        size: random(1, 2.5),
-        alpha: random(150, 255),
-        vx: random(-0.3,0.3),
-        vy: random(-0.3,0.3)
-      });
-    }
-  }
-
-  for (let i = particles.length - 1; i >= 0; i--) {
-    let p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.alpha -= 1.5;
-    fill(255, p.alpha);
-    noStroke();
-    ellipse(p.x, p.y, p.size);
-
-    if (p.alpha <= 0) {
-      particles.splice(i, 1);
-    }
-  }
-}
-
-function windowResized() {
-  resizeCanvas(window.innerWidth, window.innerHeight);
+for (let i = 0; i < 15; i++) {
+    const line = document.createElement("div");
+    line.className = "stream-line";
+    line.style.top = (i * 40) + "px";
+    line.style.animationDuration = (20 + Math.random()*20) + "s";
+    line.textContent = randomLine();
+    stream.appendChild(line);
 }
 </script>
 
