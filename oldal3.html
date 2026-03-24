@@ -16,11 +16,11 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  padding-top: 50px; /* Kellemes felső margó */
 }
 
 h1 {
-  margin-bottom: 10px;
+  position: absolute;
+  top: 20px; /* Felirat a képernyő tetején */
   font-size: 24px;
   text-align: center;
 }
@@ -100,8 +100,8 @@ function start() {
     },
     err => {
       if (err.code === 1) info.innerHTML = "Engedély megtagadva";
-      else if (err.code === 2) info.innerHTML = "Nincs GPS jel ";
-      else if (err.code === 3) info.innerHTML = "GPS timeout ";
+      else if (err.code === 2) info.innerHTML = "Nincs GPS jel";
+      else if (err.code === 3) info.innerHTML = "GPS timeout";
       else info.innerHTML = "GPS hiba ";
     },
     {
@@ -117,7 +117,7 @@ function start() {
         if (res === "granted") {
           window.addEventListener("deviceorientation", update, true);
         } else {
-          info.innerHTML = "Iránytű tiltva ";
+          info.innerHTML = "Iránytű tiltva";
         }
       })
       .catch(() => {
