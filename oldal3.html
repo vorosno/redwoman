@@ -21,7 +21,6 @@ body {
 
 h1 {
   margin-bottom: 15px;
-  letter-spacing: 2px;
 }
 
 .compass {
@@ -30,7 +29,6 @@ h1 {
   height: 260px;
   border: 3px solid white;
   border-radius: 50%;
-  overflow: hidden;
 }
 
 .direction {
@@ -44,33 +42,32 @@ h1 {
 .east  { right: 10px; top: 50%; transform: translateY(-50%); }
 .west  { left: 10px; top: 50%; transform: translateY(-50%); }
 
-/* 🔥 TORONY MUTATÓ */
+/*  TORONY */
 .needle {
   position: absolute;
-  width: 160px;              /* nagyobb lett */
+  width: 240px;              /* MÉG NAGYOBB */
   height: auto;
-  bottom: 50%;               /* ALJA a középpontban */
+  bottom: 50%;
   left: 50%;
-  transform-origin: 50% 100%; /* alját forgatjuk */
+  transform-origin: 50% 100%;
   transform: translateX(-50%) rotate(0deg);
-  transition: transform 0.2s linear;
+  transition: transform 0.1s linear;
 }
 
 .info {
   margin-top: 20px;
-  font-size: 16px;
   text-align: center;
+  font-size: 16px;
 }
 
 button {
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 12px 24px;
   background: white;
   color: #d00000;
   border: none;
   font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 </style>
 </head>
@@ -88,7 +85,7 @@ button {
   <img src="torony.png" class="needle" id="needle">
 </div>
 
-<div class="info" id="info">Indítás szükséges...</div>
+<div class="info" id="info">Nyomd meg az indítást</div>
 
 <button onclick="start()">Indítás</button>
 
@@ -96,7 +93,7 @@ button {
 const needle = document.getElementById("needle");
 const info = document.getElementById("info");
 
-// 🎯 Pécsi TV torony
+// 🎯 cél: Pécsi TV torony
 const targetLat = 46.099167;
 const targetLon = 18.220306;
 
@@ -107,40 +104,50 @@ let heading = null;
 function start() {
   info.innerHTML = "Engedélyek kérése...";
 
-  // GPS
-  navigator.geolocation.watchPosition(
+  // 📡 GPS
+  navigator.geolocation.getCurrentPosition(
     pos => {
       userLat = pos.coords.latitude;
       userLon = pos.coords.longitude;
       info.innerHTML = "Pozíció megvan ✔";
+
+      // utána folyamatos frissítés
+      navigator.geolocation.watchPosition(p => {
+        userLat = p.coords.latitude;
+        userLon = p.coords.longitude;
+      });
     },
     err => {
-      info.innerHTML = "Helymeghatározás hiba";
-      console.error(err);
+      if (err.code === 1) info.innerHTML = "Engedély megtagadva ";
+      else if (err.code === 2) info.innerHTML = "Nincs GPS jel";
+      else if (err.code === 3) info.innerHTML = "GPS timeout ";
+      else info.innerHTML = "GPS hiba ";
     },
     {
       enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 10000
+      timeout: 20000
     }
   );
 
-  // iránytű
-  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+  // 🧭 iOS compass FIX
+  if (typeof DeviceOrientationEvent.requestPermission === "function") {
     DeviceOrientationEvent.requestPermission()
       .then(res => {
-        if (res === 'granted') {
-          window.addEventListener("deviceorientation", update);
+        if (res === "granted") {
+          window.addEventListener("deviceorientation", update, true);
         } else {
-          info.innerHTML = "Iránytű tiltva ❌";
+          info.innerHTML = "Iránytű tiltva ";
         }
       })
-      .catch(err => console.error(err));
+      .catch(() => {
+        info.innerHTML = "Iránytű hiba ";
+      });
   } else {
-    window.addEventListener("deviceorientation", update);
+    window.addEventListener("deviceorientation", update, true);
   }
 }
 
+// 📐 bearing
 function getBearing(lat1, lon1, lat2, lon2) {
   const toRad = d => d * Math.PI / 180;
   const toDeg = r => r * 180 / Math.PI;
@@ -155,6 +162,7 @@ function getBearing(lat1, lon1, lat2, lon2) {
   return (brng + 360) % 360;
 }
 
+// 📏 distance
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const toRad = d => d * Math.PI / 180;
@@ -163,22 +171,27 @@ function getDistance(lat1, lon1, lat2, lon2) {
   let dLon = toRad(lon2 - lon1);
 
   let a =
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.sin(dLat/2)**2 +
     Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon/2) * Math.sin(dLon/2);
+    Math.sin(dLon/2)**2;
 
-  let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c;
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
 }
 
 function update(event) {
-  if (event.webkitCompassHeading) {
-    heading = event.webkitCompassHeading;
+  let h;
+
+  if (event.webkitCompassHeading !== undefined) {
+    h = event.webkitCompassHeading;
   } else if (event.alpha !== null) {
-    heading = 360 - event.alpha;
+    h = 360 - event.alpha;
   }
 
-  if (userLat && userLon && heading !== null) {
+  if (h == null) return;
+
+  heading = h;
+
+  if (userLat && userLon) {
     const bearing = getBearing(userLat, userLon, targetLat, targetLon);
     const distance = getDistance(userLat, userLon, targetLat, targetLon);
 
@@ -187,13 +200,12 @@ function update(event) {
     needle.style.transform =
       `translateX(-50%) rotate(${rotation}deg)`;
 
-    let distText =
+    let dist =
       distance > 1000
         ? (distance / 1000).toFixed(2) + " km"
         : Math.round(distance) + " m";
 
-    info.innerHTML =
-      `Távolság: ${distText}`;
+    info.innerHTML = `Távolság: ${dist}`;
   }
 }
 </script>
