@@ -1,80 +1,83 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8">
-  <title>Iránytű</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      background: #d00000;
-      color: white;
-      font-family: Futura, Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+<title>TV torony</title>
 
-    h1 {
-      margin-bottom: 15px;
-      letter-spacing: 2px;
-    }
+<style>
+body {
+  margin: 0;
+  background: #d00000;
+  color: white;
+  font-family: Futura, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
-    .compass {
-      position: relative;
-      width: 260px;
-      height: 260px;
-      border: 3px solid white;
-      border-radius: 50%;
-    }
+h1 {
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
 
-    .direction {
-      position: absolute;
-      font-size: 16px;
-      font-weight: bold;
-    }
+.compass {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  border: 3px solid white;
+  border-radius: 50%;
+  overflow: hidden;
+}
 
-    .north { top: 10px; left: 50%; transform: translateX(-50%); }
-    .south { bottom: 10px; left: 50%; transform: translateX(-50%); }
-    .east  { right: 10px; top: 50%; transform: translateY(-50%); }
-    .west  { left: 10px; top: 50%; transform: translateY(-50%); }
+.direction {
+  position: absolute;
+  font-size: 16px;
+  font-weight: bold;
+}
 
-    .needle {
-      position: absolute;
-      width: 110px;
-      height: 110px;
-      top: 50%;
-      left: 50%;
-      transform-origin: 50% 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-      transition: transform 0.2s linear;
-    }
+.north { top: 10px; left: 50%; transform: translateX(-50%); }
+.south { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.east  { right: 10px; top: 50%; transform: translateY(-50%); }
+.west  { left: 10px; top: 50%; transform: translateY(-50%); }
 
-    .info {
-      margin-top: 20px;
-      font-size: 16px;
-      text-align: center;
-      line-height: 1.5;
-    }
+/* 🔥 TORONY MUTATÓ */
+.needle {
+  position: absolute;
+  width: 160px;              /* nagyobb lett */
+  height: auto;
+  bottom: 50%;               /* ALJA a középpontban */
+  left: 50%;
+  transform-origin: 50% 100%; /* alját forgatjuk */
+  transform: translateX(-50%) rotate(0deg);
+  transition: transform 0.2s linear;
+}
 
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: white;
-      color: #d00000;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-  </style>
+.info {
+  margin-top: 20px;
+  font-size: 16px;
+  text-align: center;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: white;
+  color: #d00000;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+</style>
 </head>
+
 <body>
 
-<h1>CÉL IRÁNY</h1>
+<h1>TV TORONY</h1>
 
 <div class="compass">
   <div class="direction north">É</div>
@@ -82,51 +85,62 @@
   <div class="direction east">K</div>
   <div class="direction west">Ny</div>
 
-  <!-- 🔴 EZ A MUTATÓ -->
   <img src="torony.png" class="needle" id="needle">
 </div>
 
-<div class="info" id="info">
-  Pozíció betöltése...
-</div>
+<div class="info" id="info">Indítás szükséges...</div>
 
-<button onclick="startCompass()">Indítás</button>
+<button onclick="start()">Indítás</button>
 
 <script>
 const needle = document.getElementById("needle");
 const info = document.getElementById("info");
 
-// 🎯 CÉLPONT (koordinátád)
+// 🎯 Pécsi TV torony
 const targetLat = 46.099167;
 const targetLon = 18.220306;
 
 let userLat = null;
 let userLon = null;
-let heading = 0;
+let heading = null;
 
-function startCompass() {
+function start() {
+  info.innerHTML = "Engedélyek kérése...";
+
   // GPS
-  navigator.geolocation.watchPosition(pos => {
-    userLat = pos.coords.latitude;
-    userLon = pos.coords.longitude;
-  });
+  navigator.geolocation.watchPosition(
+    pos => {
+      userLat = pos.coords.latitude;
+      userLon = pos.coords.longitude;
+      info.innerHTML = "Pozíció megvan ✔";
+    },
+    err => {
+      info.innerHTML = "Helymeghatározás hiba";
+      console.error(err);
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 10000
+    }
+  );
 
-  // iránytű engedély
+  // iránytű
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
     DeviceOrientationEvent.requestPermission()
       .then(res => {
         if (res === 'granted') {
-          window.addEventListener("deviceorientation", updateCompass);
+          window.addEventListener("deviceorientation", update);
         } else {
-          alert("Engedély szükséges az iránytűhöz!");
+          info.innerHTML = "Iránytű tiltva ❌";
         }
-      });
+      })
+      .catch(err => console.error(err));
   } else {
-    window.addEventListener("deviceorientation", updateCompass);
+    window.addEventListener("deviceorientation", update);
   }
 }
 
-// 📐 irány számítás
 function getBearing(lat1, lon1, lat2, lon2) {
   const toRad = d => d * Math.PI / 180;
   const toDeg = r => r * 180 / Math.PI;
@@ -141,7 +155,6 @@ function getBearing(lat1, lon1, lat2, lon2) {
   return (brng + 360) % 360;
 }
 
-// 📏 távolság (méter)
 function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371000;
   const toRad = d => d * Math.PI / 180;
@@ -158,22 +171,21 @@ function getDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-function updateCompass(event) {
+function update(event) {
   if (event.webkitCompassHeading) {
     heading = event.webkitCompassHeading;
-  } else {
+  } else if (event.alpha !== null) {
     heading = 360 - event.alpha;
   }
 
-  if (userLat && userLon) {
+  if (userLat && userLon && heading !== null) {
     const bearing = getBearing(userLat, userLon, targetLat, targetLon);
     const distance = getDistance(userLat, userLon, targetLat, targetLon);
 
-    // 🔥 EZ FORGATJA A TORNYOT A CÉL FELÉ
     const rotation = bearing - heading;
 
     needle.style.transform =
-      `translate(-50%, -50%) rotate(${rotation}deg)`;
+      `translateX(-50%) rotate(${rotation}deg)`;
 
     let distText =
       distance > 1000
@@ -181,7 +193,6 @@ function updateCompass(event) {
         : Math.round(distance) + " m";
 
     info.innerHTML =
-      `Irány: ${Math.round(bearing)}°<br>` +
       `Távolság: ${distText}`;
   }
 }
