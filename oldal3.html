@@ -27,7 +27,7 @@ h1 {
 
 .needle {
   position: absolute;
-  width: 240px;              /* Nagyobb torony */
+  width: 288px;              /* A torony még nagyobb */
   height: auto;
   bottom: 50%;
   left: 50%;
@@ -68,11 +68,12 @@ button {
 <div class="info" id="info">Nyomd meg az indítást</div>
 
 <!-- Indító gomb -->
-<button onclick="start()">Indítás</button>
+<button id="startButton" onclick="start()">Indítás</button>
 
 <script>
 const needle = document.getElementById("needle");
 const info = document.getElementById("info");
+const startButton = document.getElementById("startButton");
 
 // 🎯 cél: Pécsi TV torony
 const targetLat = 46.099167;
@@ -90,7 +91,7 @@ function start() {
     pos => {
       userLat = pos.coords.latitude;
       userLon = pos.coords.longitude;
-      info.innerHTML = "Pozíció megvan ✔";
+      info.innerHTML = "Pozíció megvan ";
 
       // Utána folyamatos frissítés
       navigator.geolocation.watchPosition(p => {
@@ -99,9 +100,9 @@ function start() {
       });
     },
     err => {
-      if (err.code === 1) info.innerHTML = "Engedély megtagadva";
-      else if (err.code === 2) info.innerHTML = "Nincs GPS jel";
-      else if (err.code === 3) info.innerHTML = "GPS timeout";
+      if (err.code === 1) info.innerHTML = "Engedély megtagadva ";
+      else if (err.code === 2) info.innerHTML = "Nincs GPS jel ";
+      else if (err.code === 3) info.innerHTML = "GPS timeout ";
       else info.innerHTML = "GPS hiba ";
     },
     {
@@ -116,15 +117,17 @@ function start() {
       .then(res => {
         if (res === "granted") {
           window.addEventListener("deviceorientation", update, true);
+          startButton.style.display = "none"; // Elrejtjük az indító gombot
         } else {
-          info.innerHTML = "Iránytű tiltva";
+          info.innerHTML = "Iránytű tiltva ";
         }
       })
       .catch(() => {
-        info.innerHTML = "Iránytű hiba";
+        info.innerHTML = "Iránytű hiba ";
       });
   } else {
     window.addEventListener("deviceorientation", update, true);
+    startButton.style.display = "none"; // Elrejtjük az indító gombot
   }
 }
 
