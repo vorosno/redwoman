@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>TV torony</title>
 
 <style>
@@ -23,29 +22,9 @@ h1 {
   margin-bottom: 15px;
 }
 
-.compass {
-  position: relative;
-  width: 260px;
-  height: 260px;
-  border: 3px solid white;
-  border-radius: 50%;
-}
-
-.direction {
-  position: absolute;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.north { top: 10px; left: 50%; transform: translateX(-50%); }
-.south { bottom: 10px; left: 50%; transform: translateX(-50%); }
-.east  { right: 10px; top: 50%; transform: translateY(-50%); }
-.west  { left: 10px; top: 50%; transform: translateY(-50%); }
-
-/*  TORONY */
 .needle {
   position: absolute;
-  width: 240px;              /* MÉG NAGYOBB */
+  width: 240px;              /* Nagyobb torony */
   height: auto;
   bottom: 50%;
   left: 50%;
@@ -76,17 +55,13 @@ button {
 
 <h1>TV TORONY</h1>
 
-<div class="compass">
-  <div class="direction north">É</div>
-  <div class="direction south">D</div>
-  <div class="direction east">K</div>
-  <div class="direction west">Ny</div>
+<!-- Csak a torony tűje -->
+<img src="torony.png" class="needle" id="needle">
 
-  <img src="torony.png" class="needle" id="needle">
-</div>
-
+<!-- Információs szöveg: távolság -->
 <div class="info" id="info">Nyomd meg az indítást</div>
 
+<!-- Indító gomb -->
 <button onclick="start()">Indítás</button>
 
 <script>
@@ -111,7 +86,7 @@ function start() {
       userLon = pos.coords.longitude;
       info.innerHTML = "Pozíció megvan ✔";
 
-      // utána folyamatos frissítés
+      // Utána folyamatos frissítés
       navigator.geolocation.watchPosition(p => {
         userLat = p.coords.latitude;
         userLon = p.coords.longitude;
@@ -119,7 +94,7 @@ function start() {
     },
     err => {
       if (err.code === 1) info.innerHTML = "Engedély megtagadva ";
-      else if (err.code === 2) info.innerHTML = "Nincs GPS jel";
+      else if (err.code === 2) info.innerHTML = "Nincs GPS jel ";
       else if (err.code === 3) info.innerHTML = "GPS timeout ";
       else info.innerHTML = "GPS hiba ";
     },
@@ -140,7 +115,7 @@ function start() {
         }
       })
       .catch(() => {
-        info.innerHTML = "Iránytű hiba ";
+        info.innerHTML = "Iránytű hiba";
       });
   } else {
     window.addEventListener("deviceorientation", update, true);
