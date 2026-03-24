@@ -16,10 +16,13 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  padding-top: 50px; /* Kellemes felső margó */
 }
 
 h1 {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: center;
 }
 
 .needle {
@@ -34,13 +37,16 @@ h1 {
 }
 
 .info {
-  margin-top: 20px;
+  position: absolute;
+  bottom: 20px; /* Kellemes alsó margó */
   text-align: center;
   font-size: 16px;
+  font-weight: bold;
 }
 
 button {
-  margin-top: 20px;
+  position: absolute;
+  bottom: 70px; /* Gomb elhelyezése az alján */
   padding: 12px 24px;
   background: white;
   color: #d00000;
@@ -55,7 +61,7 @@ button {
 
 <h1>TV TORONY</h1>
 
-<!-- Csak a torony tűje -->
+<!-- Csak a torony tűje, középre igazítva -->
 <img src="torony.png" class="needle" id="needle">
 
 <!-- Információs szöveg: távolság -->
@@ -93,7 +99,7 @@ function start() {
       });
     },
     err => {
-      if (err.code === 1) info.innerHTML = "Engedély megtagadva ";
+      if (err.code === 1) info.innerHTML = "Engedély megtagadva";
       else if (err.code === 2) info.innerHTML = "Nincs GPS jel ";
       else if (err.code === 3) info.innerHTML = "GPS timeout ";
       else info.innerHTML = "GPS hiba ";
