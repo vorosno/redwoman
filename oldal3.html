@@ -20,14 +20,26 @@ body {
 
 h1 {
   position: absolute;
-  top: 20px; /* Felirat a képernyő tetején */
+  top: 20px;
   font-size: 24px;
   text-align: center;
 }
 
+/* 🔙 Vissza gomb */
+.back-button {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
 .needle {
   position: absolute;
-  width: 288px;              /* A torony még nagyobb */
+  width: 288px;
   height: auto;
   bottom: 50%;
   left: 50%;
@@ -38,7 +50,7 @@ h1 {
 
 .info {
   position: absolute;
-  bottom: 20px; /* Kellemes alsó margó */
+  bottom: 20px;
   text-align: center;
   font-size: 16px;
   font-weight: bold;
@@ -46,7 +58,7 @@ h1 {
 
 button {
   position: absolute;
-  bottom: 70px; /* Gomb elhelyezése az alján */
+  bottom: 70px;
   padding: 12px 24px;
   background: white;
   color: #d00000;
@@ -58,6 +70,9 @@ button {
 </head>
 
 <body>
+
+<!-- 🔙 Vissza -->
+<div class="back-button" onclick="history.back()">VISSZA</div>
 
 <h1>TV TORONY</h1>
 
@@ -117,7 +132,7 @@ function start() {
       .then(res => {
         if (res === "granted") {
           window.addEventListener("deviceorientation", update, true);
-          startButton.style.display = "none"; // Elrejtjük az indító gombot
+          startButton.style.display = "none";
         } else {
           info.innerHTML = "Iránytű tiltva ";
         }
@@ -127,7 +142,7 @@ function start() {
       });
   } else {
     window.addEventListener("deviceorientation", update, true);
-    startButton.style.display = "none"; // Elrejtjük az indító gombot
+    startButton.style.display = "none";
   }
 }
 
