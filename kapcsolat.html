@@ -29,6 +29,13 @@ body {
   user-select: none;
 }
 
+/* Középső ikonok */
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
 /* ⭐ Csillag */
 .star {
   font-size: 140px;
@@ -38,7 +45,17 @@ body {
   user-select: none;
 }
 
-.star:hover {
+/* ▶ Háromszög */
+.triangle {
+  font-size: 140px;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.star:hover,
+.triangle:hover {
   transform: scale(1.1);
 }
 </style>
@@ -49,14 +66,27 @@ body {
 <!-- 🔙 Vissza -->
 <div class="back-button" onclick="history.back()">VISSZA</div>
 
-<!-- ⭐ Instagram link -->
-<a 
-  class="star" 
-  href="https://www.instagram.com/kikivivki/" 
-  target="_blank"
->
-★
-</a>
+<div class="icons">
+
+  <!-- ⭐ Instagram -->
+  <a 
+    class="star" 
+    href="https://www.instagram.com/kikivivki/" 
+    target="_blank"
+  >
+    ★
+  </a>
+
+  <!-- ▶ YouTube -->
+  <a 
+    class="triangle" 
+    href="https://www.youtube.com/@kivijarski" 
+    target="_blank"
+  >
+    ▶
+  </a>
+
+</div>
 
 </body>
 </html>
