@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>instám, youtubeom</title>
+
+<style>
+body {
+  margin: 0;
+  background: #d00000;
+  font-family: Futura, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 🔙 Vissza gomb */
+.back-button {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ⭐ Csillag */
+.star {
+  font-size: 140px;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔙 Vissza -->
+<div class="back-button" onclick="history.back()">VISSZA</div>
+
+<!-- ⭐ Instagram link -->
+<a 
+  class="star" 
+  href="https://www.instagram.com/kikivivki/" 
+  target="_blank"
+>
+★
+</a>
+
+</body>
+</html>
