@@ -47,7 +47,7 @@ body {
 <div class="back-button" onclick="history.back()">VISSZA</div>
 
 <!-- 🖼️ Kép -->
-<img src="lena1.jpg" id="slideshow" class="main-image">
+<img src="lena1.JPG" id="slideshow" class="main-image">
 
 <script>
 const image = document.getElementById("slideshow");
@@ -56,7 +56,7 @@ let current = 1;
 
 setInterval(() => {
     current = current === 1 ? 2 : 1;
-    image.src = "lena" + current + ".jpg";
+    image.src = "lena" + current + ".JPG";
 }, 5000);
 </script>
 
