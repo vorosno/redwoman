@@ -17,8 +17,6 @@ body {
     align-items: center;
 }
 
-/* 🔙 Vissza gomb */
-
 .back-button {
     position: absolute;
     top: 20px;
@@ -31,8 +29,6 @@ body {
     z-index: 10;
 }
 
-/* 🖼️ Kép */
-
 .main-image {
     max-width: 95vw;
     max-height: 95vh;
@@ -43,20 +39,19 @@ body {
 
 <body>
 
-<!-- 🔙 Vissza -->
 <div class="back-button" onclick="history.back()">VISSZA</div>
 
-<!-- 🖼️ Kép -->
 <img src="lena1.JPG" id="slideshow" class="main-image">
 
 <script>
-const image = document.getElementById("slideshow");
+const images = ["lena1.JPG", "lena2.JPG"];
+let index = 0;
 
-let current = 1;
+const img = document.getElementById("slideshow");
 
 setInterval(() => {
-    current = current === 1 ? 2 : 1;
-    image.src = "lena" + current + ".JPG";
+    index = (index + 1) % images.length;
+    img.src = images[index] + "?t=" + new Date().getTime();
 }, 5000);
 </script>
 
