@@ -41,8 +41,8 @@ body {
   font-size: 140px;
   color: white;
   text-decoration: none;
-  transition: transform 0.2s ease;
   user-select: none;
+  animation: spinFloat1 3s linear infinite;
 }
 
 /* ▶ Háromszög */
@@ -50,13 +50,46 @@ body {
   font-size: 140px;
   color: white;
   text-decoration: none;
-  transition: transform 0.2s ease;
   user-select: none;
+  animation: spinFloat2 2.5s linear infinite;
 }
 
-.star:hover,
-.triangle:hover {
-  transform: scale(1.1);
+/* ⭐ Animáció */
+@keyframes spinFloat1 {
+  0% {
+    transform: rotate(0deg) translateX(0px);
+  }
+  25% {
+    transform: rotate(90deg) translateX(15px);
+  }
+  50% {
+    transform: rotate(180deg) translateX(0px);
+  }
+  75% {
+    transform: rotate(270deg) translateX(-15px);
+  }
+  100% {
+    transform: rotate(360deg) translateX(0px);
+  }
+}
+
+/* ▶ Animáció */
+@keyframes spinFloat2 {
+  0% {
+    transform: rotate(0deg) translateX(0px);
+  }
+  25% {
+    transform: rotate(-90deg) translateX(-20px);
+  }
+  50% {
+    transform: rotate(-180deg) translateX(0px);
+  }
+  75% {
+    transform: rotate(-270deg) translateX(20px);
+  }
+  100% {
+    transform: rotate(-360deg) translateX(0px);
+  }
 }
 </style>
 </head>
