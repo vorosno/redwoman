@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>valami</title>
+
+<style>
+body {
+    margin: 0;
+    background: #B32714;
+    font-family: Futura, Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 🔙 Vissza gomb */
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    z-index: 10;
+}
+
+/* 🖼️ Kép */
+
+.main-image {
+    max-width: 95vw;
+    max-height: 95vh;
+    object-fit: contain;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔙 Vissza -->
+<div class="back-button" onclick="history.back()">VISSZA</div>
+
+<!-- 🖼️ Kép -->
+<img src="lena1.jpg" id="slideshow" class="main-image">
+
+<script>
+const image = document.getElementById("slideshow");
+
+let current = 1;
+
+setInterval(() => {
+    current = current === 1 ? 2 : 1;
+    image.src = "lena" + current + ".jpg";
+}, 5000);
+</script>
+
+</body>
+</html>
